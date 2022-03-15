@@ -24,6 +24,7 @@ use Cake\Log\Log;
 use Cake\TestSuite\TestCase;
 use Exception;
 use TestApp\Test\Fixture\ArticlesFixture;
+use TestApp\Test\Fixture\FeaturedTagsFixture;
 use TestApp\Test\Fixture\ImportsFixture;
 use TestApp\Test\Fixture\LettersFixture;
 use TestApp\Test\Fixture\StringsTestsFixture;
@@ -192,6 +193,19 @@ class TestFixtureTest extends TestCase
         $fixtureSchema = $fixture->getTableSchema();
         $this->assertSame(['id', 'letter', 'complex_field'], $fixtureSchema->columns());
         $this->assertSame('json', $fixtureSchema->getColumnType('complex_field'));
+    }
+
+    /**
+     * test init with other tables used in initialize()
+     */
+    public function testInitInitializeUsesRegistry(): void
+    {
+        $this->setAppNamespace();
+        $fixture = new FeaturedTagsFixture();
+        $fixture->init();
+
+        $expected = ['tag_id', 'priority'];
+        $this->assertSame($expected, $fixture->getTableSchema()->columns());
     }
 
     /**
